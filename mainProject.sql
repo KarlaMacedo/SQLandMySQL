@@ -37,3 +37,39 @@ CREATE TABLE IF NOT EXISTS operations(
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `finished` TINYINT(1) NOT NULL
 );
+
+INSERT INTO authors (author_id, name, nationality)  /* INSERTAR INFORMACIÓN O TUPLA A LA TABLA, SE COLOCA ENTRE PARÉNTESIS LOS NOMBRES DE LAS COLUMNAS */
+VALUES (NULL, 'Juan Rulfo', 'MEX'); /* Y LUEGO LO VALORES QUE SE VANA A INSERTAR */ /*  */
+
+INSERT INTO authors (name, nationality)
+VALUES ('Gabriel García Márquez', 'COL');
+
+INSERT INTO authors 
+VALUES (NULL,'Juan Gabriel Vazquez', 'COL');
+
+INSERT INTO authors(name,nationality) /* INSERTAR VARIOS DATOS O TUPLAS A LA VEZ */
+VALUES('Julio Cortázar','ARG'),
+    ('Isabel Allende', 'CHL'),
+    ('Octavio Paz', 'MEX'),
+    ('Juan Carlos Onelli', 'URY');
+
+INSERT INTO authors (author_id,name) /* INSERTAR UNA TUPLA CON EL ID QUE YO DESEO */
+VALUES(16, 'Pablo Neruda');
+
+INSERT INTO `clients` (client_id, name, email, birthdate, gender, active)
+VALUES (1,'Maria Dolores Gomez','Maria Dolores.95983222J@random.names','1971-06-06','F',1),
+(2,'Adrian Fernandez','Adrian.55818851J@random.names','1970-04-09','M',1),
+(3,'Maria Luisa Marin','Maria Luisa.83726282A@random.names','1957-07-30','F',1),
+(4,'Pedro Sanchez','Pedro.78522059J@random.names','1992-01-31','M',1);
+
+INSERT INTO `clients` (name, email, birthdate, gender, active)
+VALUES ('Pedro Sanchez','Pedro.78522059J@random.names','1992-01-31','M',0)
+ON DUPLICATE KEY IGNORE ALL; /* "IGNORE ALL" NUNCA SE RECOMIENDA USAR IGNORE ALL PERO AYUDA A QUE SE HAGAN LAS COSAS SIN QUE TE DE ERRORES*/
+
+INSERT INTO `clients` (name, email, birthdate, gender, active)
+VALUES ('Pedro Sanchez','Pedro.78522059J@random.names','1992-01-31','M',0)
+ON DUPLICATE KEY UPDATE SET email= ''; /* UPDATE SIRVE PARA CUANDO SE ENCUENTRE UNA KEY DUCPLICADA, ACTUALICE LA TABLA CON ALGUN VALOR EN ESPECÍFICO, LO QUE YA ESTÁ, QUE LO ACTUALICE CON LO QUE YO QUIERO*/
+
+INSERT INTO `clients` (name, email, birthdate, gender, active)
+VALUES ('Pedro Sanchez','Pedro.78522059J@random.names','1992-01-31','M',0)
+ON DUPLICATE KEY UPDATE active= VALUES(active); /* UPDATE SIRVE PARA CUANDO SE ENCUENTRE UNA KEY DUCPLICADA, ACTUALICE LA TABLA CON EL VALOR DADO EN ESA SENTENCIA O DEFECTO, LO QUE YA ESTÁ, QUE LO ACTUALICE CON LO QUE YO QUIERO */
