@@ -1,9 +1,9 @@
-DROP DATABASE IF EXISTS pruebaplatzi;
+DROP DATABASE IF EXISTS pruebaplatzi; /* CUIDADO PORQUE SI EXISTE UNA BD ASÍ, LA VA A BORRAR*/
 
-CREATE DATABASE pruebaplatzi;
-USE pruebaplatzi;
+CREATE DATABASE pruebaplatzi; /* CREAR LA BD */
+USE pruebaplatzi; /* ENTRAR A LA BD */
 
-CREATE TABLE `authors` (
+CREATE TABLE `authors` ( /* CREAR LAS TABLAS */
   `author_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   `nationality` varchar(100) DEFAULT NULL,
@@ -481,3 +481,12 @@ CREATE TABLE `transactions` (
   `finished` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`transaction_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO transactions (book_id, client_id, type, finished) VALUES
+(12,34,'sell',1),
+(54,87,'lend',0),
+(3,14,'sell',1),
+(1,54,'sell',1),
+(12,81,'lend',1),
+(12,81,'sell',1),
+(87,29,'sell',1);

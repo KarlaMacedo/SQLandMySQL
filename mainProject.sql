@@ -86,3 +86,65 @@ INSERT INTO books(title, author_id, year) /* ****SUBQUERY O QUERIES ANIDADOS****
 VALUES ('Vuelta al Laberinto de la Soledad',
     (SELECT author_id FROM authors WHERE name = 'Octavio Paz' LIMIT 1),
     1960);
+
+/* SELECT */ /*  */
+SELECT name, email, gender
+FROM clients 
+WHERE gender = 'F'; /* SELECIONA LAS CLIENTAS */
+
+SELECT year(birthdate)
+FROM clients; /* TRAE SÓLO EL AÑO DE LOS CUMPLEAÑOS DE LOS CLIENTES */
+
+SELECT year(NOW()) - year(birthdate)
+FROM clients; /* TRAE LA EDAD DE LOS CLIENTES */
+
+SELECT name, year(NOW()) - year(birthdate)
+FROM clients; /* TRAE LA EDAD Y NOMBRE DE LOS CLIENTES */
+
+SELECT * FROM clients
+WHERE name LIKE '%Saave%'; /* TRAE TODOS LOS CLIENTES QUE EN SU NOMBRE CONTENGAN LO QUE ESTA ENTRE COMILLAS. EL % INDICA QUE NO IMPORTA LO QUE ESTE ANTES O DESPUÉS DE EL */
+
+SELECT name, email, YEAR(NOW()) - YEAR(birthdate) AS edad, gender
+FROM clients
+WHERE gender = 'F'
+AND name LIKE '%Lop%'; /* TRAER LA INFORMACIÓN DE LOS CLIENTES DE LAS COLUMNAS SELECCIONADAS, CREA EN EL RESULTADO LA COLUMNA EDAD Y FILTRA SÓLO A LAS MUJERES Y QUE TENGAN LOP EN SU NOMBRE*/
+
+/* CRUZAR LAS TABLAS */ /*  */
+SELECT * FROM authors
+WHERE author_id >0 AND author_id <= 5; /* SELECCIONA LOS AUTORES CON ID DEL 1-5 */
+
+SELECT * FROM books
+WHERE author_id BETWEEN 1 AND 5; /* SELECCIONA LOS LIBROS CON AUTORES QUE TENGAN EL ID DEL 1-5 */
+
+SELECT book_id, author_id, title
+FROM books
+WHERE author_id BETWEEN 1 AND 5;
+
+SELECT b.book_id, a.name, a.author_id, b.title /* LAS COLUMNAS COMPARTIDAS DE LAS TABLAS CRUZADAS DA IGUAL A CUÁL TABLA HAGAS REFERENCIA */
+FROM books AS b /* ALIAS PARA REFERIRTE A UNA TABLA */
+JOIN authors AS A /* JOIN ES LO MISMO QUE INNER */
+    ON a.author_id = b.author_id
+WHERE a.author_id BETWEEN 1 AND 5; 
+
+SELECT c.name, b.title, t.type /* UNE TRES TABLAS, USANDO COMO PIVOTE LA TABLA DE TRANSACTIONS */
+FROM transactions AS t
+JOIN books AS b
+    ON t.book_id = b.book_id
+JOIN clients AS c
+    ON t.client_id = c.client_id;
+
+SELECT c.name, b.title, a.name, t.type /* UNE TRES TABLAS, USANDO COMO PIVOTE LA TABLA DE TRANSACTIONS */
+FROM transactions AS t
+JOIN books AS b
+    ON t.book_id = b.book_id
+JOIN clients AS c
+    ON t.client_id = c.client_id
+JOIN authors AS a
+    ON b.author_id = a.author_id
+WHERE c.gender='M' 
+    AND t.type IN ('sell', 'lend');/* VARIAS OPCIONES */
+
+SELECT b.title, a.name /* JOIN IMPLICITO */
+FROM authors AS a, books AS b
+WHERE a.author_id = b.author_id
+LIMIT 10;
