@@ -1,3 +1,13 @@
+/******************** INCIOS */
+/* C:\Users\Karla>cd ..
+C:\Users>cd ..
+C:\>cd ./"Program Files"
+C:\Program Files>cd ./MySQL
+C:\Program Files\MySQL>cd ./"MySQL Server 8.0"
+C:\Program Files\MySQL\MySQL Server 8.0>cd ./bin
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysql -h localhost -u root -p
+Enter password: ******** */
+
 CREATE TABLE IF NOT EXISTS books (  /* PLURAL Y ABAJO YA SINGULAR, BUENA PRACTICA QUE CUANDO NO ES TU CÓDIGO MAYUSCULAS Y SI ES TUYO MINUSCULAS, AUNQUE ACEPTE CUALQUIERA */
     `book_id` INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,  /* ENTERO Y QUE SE CREE UN ID DE FORMA INCREMENTAL AUTOMÁTICAMENTE EN CADA FILA, SI SE BORRA UNA FILA SE VA A CREEAR UN EL NÚMERO SIGUIENTE AL ÚLTIMO QUE SE DIÓ, INDEPENTIENDTEMENTE DE QUE SE HAYAN BORRADO FILAS */
     `author_id` INT UNSIGNED,  /* ENTERO Y NO SE PUEDE REPETIR */
@@ -480,3 +490,27 @@ JOIN authors AS a
 ON a.author_id = b.author_id
 WHERE a.nationality IS NOT NULL
 GROUP BY nationality;
+
+
+/* ***********Comando mysqldump */
+ALTER /* Manera de alter un esquema en una base de datos, CUIDADO, porque un error puede afectar nuesta bd */
+
+ALTER TABLE authors /*agregar una columna nueva a una tabla*/
+ADD COLUMN birthyear INTEGER
+DEFAULT 1930
+AFTER name;
+
+ALTER TABLE authors /*modificar una columna de una tabla*/
+MODIFY COLUMN birthyear year
+DEFAULT 1920
+AFTER name;
+
+ALTER TABLE authors /*CUIDADO QUITA una columna de una tabla*/
+DROP COLUMN birthyear;
+
+SHOW TABLES LIKE '%i%'; /*busca elementos que contengan ciertas caracterpisticas, como tener una i*/
+
+/* El comando mysqldump -u root -p pruebaplatzi te arrastra todo el schema y los datos de la base de datos. El comando mysqldump -u root -p -d pruebaplatzi > esquema.sql te permite crear un documento con solo el schema de la BD. Nota: Recordar que para los dos comandos anteriores deben realizarse en una terminal fuera de la BD y estar ubicados en el directorio donde se desea guardar el archivo. */
+/* C:\Program Files\MySQL\MySQL Server 8.0\bin>mysqldump -u root -p pruebaplatzi
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysqldump -u root -p -d pruebaplatzi | more */
+/* C:\Program Files\MySQL\MySQL Server 8.0\bin>mysqldump -u root -p -d pruebaplatzi > "C:\Users\Karla\Desktop\esquema.sql" */
