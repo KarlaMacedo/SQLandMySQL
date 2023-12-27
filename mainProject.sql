@@ -413,3 +413,70 @@ FROM transactions;
 
 -- TRUNCATE: Borra todo el contenido de una tabla CUIDADO
 TRUNCATE transactions;
+
+
+/* ***********SUPER QUERY */
+SELECT DISTINCT nationality
+FROM authors;
+
+UPDATE authors 
+SET nationality = 'GBR'
+WHERE nationality = 'ENG';
+
+SELECT COUNT(*) /* cuenta todo lo que haya */
+FROM books;
+
+SELECT COUNT(book_id) /* mas seguro */
+FROM books;
+
+SELECT SUM(price) /*suma de libros vendidos unitariamente*/
+FROM books
+WHERE sellable =1;
+
+SELECT SUM(price*copies) /*suma total de ventas*/
+FROM books
+WHERE sellable =1;
+
+SELECT sellable,
+SUM(price*copies) /*suma total de ventas y no vendidos*/
+FROM books
+GROUP BY sellable;
+
+SELECT COUNT(book_id),
+SUM(IF(year < 1950, 1, 0))
+AS '<1950'
+FROM books;
+
+SELECT COUNT(book_id),
+SUM(IF(year < 1950, 1, 0))
+AS '<1950'
+SUM(IF(year <1950, 0, 1))
+AS '<1950'
+FROM books;
+
+SELECT COUNT(book_id),
+SUM(IF(year < 1950, 1, 0))
+AS '<1950',
+SUM(IF(year >=1950 AND year < 1990, 1, 0))
+AS '>1990',
+SUM(IF(year >=1990 AND year < 2000, 1, 0))
+AS '<2000',
+SUM(IF(year >=2000, 1, 0))
+AS '<HOY'
+FROM books;
+
+SELECT nationality,
+COUNT(book_id),
+SUM(IF(year < 1950, 1, 0))
+AS '<1950',
+SUM(IF(year >=1950 AND year < 1990, 1, 0))
+AS '>1990',
+SUM(IF(year >=1990 AND year < 2000, 1, 0))
+AS '<2000',
+SUM(IF(year >=2000, 1, 0))
+AS '<HOY'
+FROM books AS b
+JOIN authors AS a
+ON a.author_id = b.author_id
+WHERE a.nationality IS NOT NULL
+GROUP BY nationality;
