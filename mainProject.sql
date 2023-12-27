@@ -353,3 +353,63 @@ LEFT JOIN authors AS a
 SELECT TO_DAYS(NOW()) /*trae los días desde el día 0 del año cero hasta hoy.*/
 
 SELECT TO_DAYS('0000-01-01'); /*el día uno*/
+
+
+/* ***********UPDATE Y DELETE */
+SELECT *
+FROM authors
+ORDER BY rand()
+LIMIT 10; /* seleccionar 10 elementos de la tabla autores al azar */
+
+-- DELETE: borra el registro.
+-- Adicionalmente filtrar con WHERE por id y limitarlo para que nos borre la cantidad elementos en específico y no toda la tabla o más elementos.
+DELETE FROM authors WHERE author_id = 161 LIMIT 1;
+
+-- UPDATE: actualizar datos de una tupla existente.
+-- También se debe filtrar con WHERE
+UPDATE clients
+SET active = 0
+WHERE client_id = 80
+LIMIT 1;
+
+SELECT COUNT(*) /* contar cuantos elementos tengo dentro de la tabla */
+FROM authors;
+
+SELECT client_id, name 
+FROM clients
+WHERE active <> 1; /* <> significa que es diferente */
+
+SELECT client_id, name, active 
+FROM clients order by rand() 
+LIMIT 10; /* en está sentencia RAND() permite ordenar de forma aleatoria, no recomendado hacerlo en producción. */
+
+SELECT client_id, name, email, active 
+FROM clients
+WHERE client_id IN (80,65,76,1,61,7,19,97); /* traer ciertos elementos específicos*/
+
+/*Al hacer un update es MUY IMPORTANTE que tenga un WHERE para ser específico y que no se duplique la data*/
+UPDATE clients
+SET active = 0
+WHERE client_id = 80
+LIMIT 1; /* actualizar elemento en específico */
+
+UPDATE clients
+SET email = 'javier@gmail.com'
+WHERE client_id = 7
+OR client_id = 19; /* actualizar elementos con ciertas condiciones en específco*/
+
+SELECT client_id, name, email, active 
+FROM clients
+WHERE client_id IN (1,6,8,27,90)
+  OR NAME like '%Lopez%';
+
+UPDATE clients
+SET active = 0
+WHERE client_id IN (1,6,8,27,90)
+  OR NAME like '%Lopez%';/* actualizar elementos con ciertas condiciones en específco*/
+
+SELECT *
+FROM transactions;
+
+-- TRUNCATE: Borra todo el contenido de una tabla CUIDADO
+TRUNCATE transactions;
