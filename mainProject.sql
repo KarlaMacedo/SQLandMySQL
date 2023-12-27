@@ -229,3 +229,127 @@ GROUP BY a.author_id
 ORDER BY a.author_id) AS TABLA_SECUNDARIA
 GROUP BY CANTIDAD_LIBROS_ESCRITOS
 ORDER BY CANTIDAD_LIBROS_ESCRITOS
+
+
+/* ***********CASOS DE NEGOCIO */
+-- ¿Qué nacionalidades hay? 
+SELECT DISTINCT nationality
+FROM authors;
+
+SELECT nationality
+FROM authors
+WHERE nationality IS NOT NULL
+GROUP BY nationality
+ORDER BY nationality;
+
+-- ¿Cuantos escritores hay de cada nacionalidad? 
+SELECT nationality, COUNT(author_id) AS c_authors
+FROM authors
+GROUP BY nationality
+ORDER BY c_authors DESC, nationality ASC; /*ORDENA PRIMERO POR UN PARÁMETRO Y LUEGO POR EL OTRO*/
+
+SELECT nationality, COUNT(*) AS quantity_of_authors
+FROM authors
+GROUP BY nationality
+ORDER BY nationality;
+
+SELECT nationality, COUNT(*) AS quantity_of_authors
+FROM authors
+WHERE nationality IS NOT NULL /* NO TRAE LAS NULL */
+AND nationality NOT IN('RUS', 'AUT') /* QUITA CIERTOS VALORES QUE NO QUIERES QUE TE INCLUYA */
+GROUP BY nationality
+ORDER BY nationality;
+
+SELECT nationality, COUNT(*) AS quantity_of_authors
+FROM authors
+WHERE nationality IS NOT NULL /* NO TRAE LAS NULL */
+AND nationality IN('RUS', 'AUT') /* SOLO TRAE LOS VALORES QUE QUIERES QUE TE INCLUYA */
+GROUP BY nationality
+ORDER BY nationality;
+
+SELECT nationality, COUNT(*) AS quantity_of_authors
+FROM authors
+WHERE nationality IS NOT NULL /* NO TRAE LAS NULL */
+GROUP BY nationality
+ORDER BY nationality;
+
+-- ¿Cuantos libros hay de cada nacionalidad? 
+SELECT nationality, COUNT(*) AS quantity_of_books
+FROM books AS b 
+LEFT JOIN authors AS a
+    ON b.author_id = a.author_id
+GROUP BY nationality; 
+
+-- ¿Cuál es el promedio/desviación estándar del precio de libros? 
+SELECT AVG(price) 
+FROM books; 
+
+SELECT AVG(price) 
+AS `promedio` /* como quiero que se llame la columna */
+FROM books; 
+
+SELECT AVG(price) AS `PROM`,
+STDDEV(price) AS `STD`/* desviación estandar */
+FROM books;
+
+-- ¿Cuál es el promedio/desviación estándar del precio de libros por nacionalidad? 
+SELECT nationality,
+COUNT(book_id) AS `Libros`,
+AVG(price) AS `Prom`,
+STDDEV(price) AS `Std`
+FROM books AS b
+JOIN authors AS a
+    ON a.author_id = b.author_id
+GROUP BY nationality
+ORDER BY `Libros` DESC;
+
+-- ¿Cuál es el promedio/desviación estándar de la cantidad de autores por nacionalidad?
+SELECT AVG(quantity_of_authors) as prom_by_nationality FROM
+    (SELECT COUNT(*) AS quantity_of_authors
+    FROM authors
+    GROUP BY nationality) 
+    AS quantity_of_authors_by_nationality;
+
+SELECT STDDEV(quantity_of_authors) as standard_deviation_by_nationality FROM
+    (SELECT COUNT(*) AS quantity_of_authors
+    FROM authors
+    GROUP BY nationality) 
+    AS quantity_of_authors_by_nationality;  
+
+-- ¿Cuál es el precio máximo y mínimo de un libro?
+SELECT MAX(price) AS Max_price,
+MIN(price) AS Min_price
+FROM books;
+
+SELECT price AS max_price FROM books
+ORDER BY price DESC
+LIMIT 1;
+
+SELECT price AS min_price FROM books
+WHERE price IS NOT NULL
+ORDER BY price ASC
+LIMIT 1; 
+
+SELECT nationality,
+MAX(price),
+MIN(price) 
+FROM books AS b
+JOIN authors AS a
+ON a.author_id = b.author_id
+GROUP BY nationality;
+
+-- ¿Cómo quedaría el reporte de préstamos?
+SELECT c.name, t.type, b.title,
+CONCAT(a.name, "(", a.nationality, ")") AS autor, /* concatena dos columnas en una sola */
+TO_DAYS(NOW()) - TO_DAYS(t.created_at) AS ago /* opetación aritmética para saber hace cuantos días se creo */
+FROM transactions AS t
+LEFT JOIN clients AS c
+  ON c.client_id = t.client_id
+LEFT JOIN books AS b
+  ON b.book_id = t.book_id
+LEFT JOIN authors AS a
+  ON b.author_id = a.author_id;
+
+SELECT TO_DAYS(NOW()) /*trae los días desde el día 0 del año cero hasta hoy.*/
+
+SELECT TO_DAYS('0000-01-01'); /*el día uno*/
