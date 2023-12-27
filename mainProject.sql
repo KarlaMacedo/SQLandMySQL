@@ -148,3 +148,84 @@ SELECT b.title, a.name /* JOIN IMPLICITO */
 FROM authors AS a, books AS b
 WHERE a.author_id = b.author_id
 LIMIT 10;
+
+SELECT b.title, a.name /* QUERY IGUAL AL ANTERIOR Mejor opción al ser mas descriptivo*/
+FROM books AS b
+INNER JOIN authors AS a 
+ON a.author_id = b.author_id
+LIMIT 10;
+
+SELECT a.author_id, a.name, a.nationality, b.title
+FROM authors AS a
+JOIN books AS b
+ON b.author_id = a.author_id
+WHERE a.author_id BETWEEN 1 AND 5
+ORDER BY a.author_id DESC; /* ORDENA LOS ELEMENTOS, SI NO PONGO NADA ME LO PONE EN ASCENDENTE ASÍ LOS HACE EN DESCENDENTE*/
+
+SELECT a.author_id, a.name, a.nationality, b.title /* LEFT JOIN ME TRAE TODO LO DE LA TABLA PIVOTE AUNQUE NO HAYA COINCIDENCIAS Y LUEGO LE AÑADE LO QUE YO QUIERA UNIRLE */
+FROM authors AS a
+LEFT JOIN books AS b
+ON b.author_id = a.author_id
+WHERE a.author_id BETWEEN 1 AND 5
+ORDER BY a.author_id DESC;
+
+SELECT a.author_id, a.name, a.nationality,
+COUNT(b.book_id) 
+FROM authors AS a
+RIGHT JOIN books AS b
+ON b.author_id = a.author_id
+WHERE a.author_id BETWEEN 1 AND 5
+GROUP BY a.author_id 
+ORDER BY a.author_id;
+
+SELECT a.author_id, a.name, a.nationality, /* QUERY QUE ME DICE CUÁNTOS LIBROS TIENE CADA AUTOR AUNQUE NO TENGA NINGUNO */
+COUNT(b.book_id) /* SABER CUÁNTOS VALORES DISTINTOS HAY */
+FROM authors AS a
+LEFT JOIN books AS b
+ON b.author_id = a.author_id
+WHERE a.author_id BETWEEN 1 AND 5
+GROUP BY a.author_id /* AGRUPARLOS POR ESTE PARÁMETRO, PARÁMETRO PIVOTE Me va a hacer la sumatoria para que me diga cuántos libros tiene ese autor */
+ORDER BY a.author_id;
+
+SELECT a.author_id, a.name, a.nationality, /* QUERY QUE ME DICE CUÁNTOS LIBROS TIENE CADA AUTOR, SÓLO LOS QUE TENGAN ALGÚN LIBRO */
+COUNT(b.book_id) 
+FROM authors AS a
+IINNER JOIN books AS b
+ON b.author_id = a.author_id
+WHERE a.author_id BETWEEN 1 AND 5
+GROUP BY a.author_id 
+ORDER BY a.author_id;
+
+SELECT a.author_id, a.name, a.nationality, /* NO FUNCIONA */
+COUNT(b.book_id) 
+FROM authors AS a
+FULL OUTER JOIN books AS b
+ON b.author_id = a.author_id
+WHERE a.author_id BETWEEN 1 AND 5
+GROUP BY a.author_id 
+ORDER BY a.author_id;
+
+SELECT * /* ASI FUNCIONA EL FULL OUTER JOIN FUNCIONA */
+FROM authors as a
+LEFT JOIN books as b 
+	ON a.author_id = b.author_id
+WHERE b.author_id IS NULL
+UNION
+SELECT *
+FROM authors as a
+RIGHT JOIN books as b 
+	ON a.author_id = b.author_id
+WHERE a.author_id IS NULL;
+
+/* QUERY ANIDADO... tabla con dos columnas:
+-Derecha "CANTIDAD_LIBROS_ESCRITOS", enumera cantidades.
+-Izquierda "CANTIDAD_AUTORES", autores que han escrito la cantidad de libros de la columna de la derecha. */
+SELECT COUNT(ID) AS CANTIDAD_AUTORES, CANTIDAD AS CANTIDAD_LIBROS_ESCRITOS
+FROM (SELECT a.author_id AS ID, a.name AS NOMBRE, COUNT(b.book_id) AS CANTIDAD
+FROM authors AS a
+LEFT JOIN books AS b
+ON a.author_id = b.author_id
+GROUP BY a.author_id
+ORDER BY a.author_id) AS TABLA_SECUNDARIA
+GROUP BY CANTIDAD_LIBROS_ESCRITOS
+ORDER BY CANTIDAD_LIBROS_ESCRITOS
